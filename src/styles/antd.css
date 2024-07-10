@@ -1,0 +1,3 @@
+.ant-form, .ant-form-item, .ant-form-item-label > label {
+  color: inherit !important;
+}
