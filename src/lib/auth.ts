@@ -32,6 +32,7 @@ export const authOptions: NextAuthOptions = {
         const accessToken: string | undefined = account.access_token
         const expire = 60 * 60 * 24 * 36
         const sub: string = token.sub && token.sub.toString() || 'error sub'
+          // @ts-ignore
         if (accessToken && sub) await redis.set(accessToken, sub, { ex: expire })
 
         const res = await prisma.user.upsert({
@@ -53,6 +54,7 @@ export const authOptions: NextAuthOptions = {
             platform: 'github',
           }
         })
+        // @ts-ignore
         const redisRoleAndExpire: { redisRole: number, expire: number } = await getRedisRoleByUserId({ sub: res.sub as string })
         const userInfo = {
           sub: res.sub,
@@ -70,6 +72,7 @@ export const authOptions: NextAuthOptions = {
     },
     session: async ({ session, token }) => {
       if (token) {
+        // @ts-ignore
         const redisRoleAndExpire: { redisRole: number, expire: number } = await getRedisRoleByUserId({ sub: token.sub as string })
         session.user = {
           sub: token.sub,
@@ -80,6 +83,7 @@ export const authOptions: NextAuthOptions = {
           role: redisRoleAndExpire.redisRole || 0,
           membershipExpire: redisRoleAndExpire.expire || null,
           accessToken: token.accessToken
+          // @ts-ignore
         } as UserInfo
       }
       return session

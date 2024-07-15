@@ -1,5 +1,8 @@
+
+
 import { useRef, useEffect } from "react";
-import opentype from "opentype.js";
+
+const opentype: any = require('opentype.js');
 
 let fontsize = 30;
 let Horizontal = 4;
@@ -15,8 +18,8 @@ export default function useDraw(id: string) {
   if (!id) throw "id不能为空";
 
   const parentRef = useRef<HTMLElement | null>(null);
-  let canvas = useRef<HTMLCanvasElement>(null);
-  let canvasCtx = useRef();
+  let canvas: any = useRef<HTMLCanvasElement>(null);
+  let canvasCtx: any = useRef();
 
   useEffect(() => {
     const dom: HTMLElement = document.getElementById(id)!;
@@ -39,15 +42,16 @@ export default function useDraw(id: string) {
     canvasCtx.current = canvas.current.getContext("2d");
   };
 
-  const rotateT = (x0, y0, x, y, a) => {
+  const rotateT = (x0: number, y0: number, x: number, y: number, a: number) => {
     let _x = (x - x0) * Math.cos(a) - (y - y0) * Math.sin(a) + x0;
     let _y = (y - y0) * Math.cos(a) + (x - x0) * Math.sin(a) + y0;
     return [_x, _y];
   };
 
+  // @ts-ignore
   const drawText = (path, ctx, points, route, offset, fontsize) => {
     let index = 0;
-    let distence = [];
+    let distence: any = [];
     let a = 0;
     let vd = 0;
     let hd = 0;
@@ -97,7 +101,7 @@ export default function useDraw(id: string) {
     }
   };
 
-  const getPoints = (path) => {
+  const getPoints = (path: any) => {
     let glypes = [];
     let tempGlype = [];
     for (let i = 0; i < path.commands.length; i++) {
@@ -147,7 +151,7 @@ export default function useDraw(id: string) {
 
   const write = (
     words = "memo 类似于 class 中 pureComponent 的特性,用于在函数式组件的父组件中对子组件进行缓存,避免在父组件重新渲染时重新渲染子组件,只有在属性发生变化时重新渲染组件",
-    font = "/fonts/hy.ttf",
+    font: any = "/fonts/hy.ttf",
     fontsize = 30,
     space = [4, 9.5],
     boundary = [15, 500 - 15, 707 - 15, 15],
@@ -160,7 +164,7 @@ export default function useDraw(id: string) {
       }
       clearArea()
       font = f;
-      const ctx = canvasCtx.current;
+      const ctx: any = canvasCtx.current;
       let [Horizontal, Vertical] = space;
       let [topBoundary, rightBoundary, bottomBoundary, leftBoundary] = boundary;
       //初始化边界
@@ -203,6 +207,7 @@ export default function useDraw(id: string) {
             path.fill = "red";
           }
           let [points, width] = getPoints(path);
+          // @ts-ignore
           if (widths + width + Horizontal > Vlimit) {
             ctx.translate(-widths, fontsize + Vertical);
             widths = 0;
@@ -215,7 +220,9 @@ export default function useDraw(id: string) {
             }
           }
           drawText(path, ctx, points, route, offset, fontsize);
+          // @ts-ignore
           ctx.translate(width + Horizontal, 0);
+          // @ts-ignore
           widths += width + Horizontal;
         }
       }

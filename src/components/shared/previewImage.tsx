@@ -59,6 +59,7 @@ export function usePreviewImage() {
     (imgProps: ImageProps) => {
       return (
         <PreviewImage
+          // @ts-ignore
           showPreviewImage={showPreviewImage}
           setPreviewImage={setPreviewImage}
           {...imgProps}

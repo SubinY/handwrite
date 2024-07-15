@@ -1,12 +1,13 @@
 "use client";
 
 import { Form, Input, Select, Button } from "antd";
-import opentype from "opentype.js";
 import { useTransferContext } from "../context";
 import { FormValueType } from "../types";
 import { PageSize } from "./PageSize";
 import { useState } from "react";
 import useDraw from "./RenderArea/useDraw";
+
+const opentype: any = require('opentype.js');
 
 const { TextArea } = Input;
 const { Option } = Select;

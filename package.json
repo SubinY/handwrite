@@ -8,7 +8,7 @@
     "build:local": "contentlayer build && next build",
     "build": "prisma generate && contentlayer build && next build",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
-    "start": "next start",
+    "start": "next start -p 8089",
     "lint": "next lint",
     "docker:up": "docker-compose up",
     "docker:down": "docker-compose down"
