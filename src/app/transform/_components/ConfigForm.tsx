@@ -6,6 +6,7 @@ import { useTransferContext } from "../context";
 import { FormValueType } from "../types";
 import { PageSize } from "./PageSize";
 import { useState } from "react";
+import useDraw from "./RenderArea/useDraw";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -41,6 +42,7 @@ export const ConfigForm = () => {
   const [form] = Form.useForm();
 
   const { formV, setFormV } = useTransferContext();
+  const { write } = useDraw("renderArea");
   const [fontSource, setFontSource] = useState<any>();
 
   const handleFontChange = (v: string) => {
@@ -64,6 +66,7 @@ export const ConfigForm = () => {
       pageH,
     };
     setFormV(values);
+    write(values.inputText);
   };
 
   return (
@@ -86,11 +89,11 @@ export const ConfigForm = () => {
         </Select>
       </FormItem>
       <FormItem label="输入文本" name="inputText">
-        <TextArea rows={10} />
+        <TextArea rows={20} />
       </FormItem>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          预览
         </Button>
       </Form.Item>
     </Form>

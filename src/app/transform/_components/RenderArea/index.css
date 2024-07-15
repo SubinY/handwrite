@@ -1,0 +1,14 @@
+#renderArea {
+  /* border: 1px black solid; */
+  position: relative;
+  user-select: none;
+}
+
+.bound {
+  /* display: none; */
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid black;
+  background-color: black;
+}
