@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Select, Button } from "antd";
+import { Form, InputNumber, Select, Button } from "antd";
 import Image from "next/image";
 import { useTransferContext } from "../../context";
 import useBound from "./useBound";
@@ -32,16 +32,16 @@ export const RenderArea = () => {
         variant="filled"
       >
         <FormItem label="上边距" name="top">
-          <Input className="!w-[50px] !mr-1" />
+          <InputNumber className="!w-[50px] !mr-1" />
         </FormItem>
         <FormItem label="左边距" name="left">
-          <Input className="!w-[50px] !mr-1" />
+          <InputNumber className="!w-[50px] !mr-1" />
         </FormItem>
         <FormItem label="下边距" name="bottom">
-          <Input className="!w-[50px] !mr-1" />
+          <InputNumber className="!w-[50px] !mr-1" />
         </FormItem>
         <FormItem label="右边距" name="right">
-          <Input className="!w-[50px]" />
+          <InputNumber className="!w-[50px]" />
         </FormItem>
       </Form>
       <div id="renderArea" className="h-full min-w-[500px]">

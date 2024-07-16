@@ -1,18 +1,6 @@
-
-
 import { useRef, useEffect } from "react";
 
-const opentype: any = require('opentype.js');
-
-let fontsize = 30;
-let Horizontal = 4;
-let Vertical = 9.5;
-let route = 10;
-let topBoundary = 63;
-let bottomBoundary = 700;
-let leftBoundary = 35;
-let rightBoundary = 1012;
-let offset = 0;
+const opentype: any = require("opentype.js");
 
 export default function useDraw(id: string) {
   if (!id) throw "id不能为空";
@@ -49,7 +37,7 @@ export default function useDraw(id: string) {
   };
 
   // @ts-ignore
-  const drawText = (path, ctx, points, route, offset, fontsize) => {
+  const drawText = (path, ctx, points, chaos, offset, fontSize) => {
     let index = 0;
     let distence: any = [];
     let a = 0;
@@ -60,15 +48,15 @@ export default function useDraw(id: string) {
       const cmd = path.commands[i];
       if (cmd.type === "M") {
         a =
-          ((-1 * route * Math.PI) / 150) *
+          ((-1 * chaos * Math.PI) / 150) *
           Math.random() *
           (Math.random() > 0.5 ? 1 : -1);
         vd =
-          ((offset * fontsize) / 250) *
+          ((offset * fontSize) / 250) *
           Math.random() *
           (Math.random() > 0.5 ? 1 : -1);
         hd =
-          ((offset * fontsize) / 250) *
+          ((offset * fontSize) / 250) *
           Math.random() *
           (Math.random() > 0.5 ? 1 : -1);
 
@@ -139,7 +127,7 @@ export default function useDraw(id: string) {
     return [points, maxx - minx];
   };
 
-  const clearArea = (boundary = [15, 500 - 15, 707 - 15, 15]) => {
+  const clearArea = (boundary = [0, 500, 707, 0]) => {
     let [topBoundary, rightBoundary, bottomBoundary, leftBoundary] = boundary;
     canvasCtx.current.clearRect(
       leftBoundary,
@@ -150,87 +138,81 @@ export default function useDraw(id: string) {
   };
 
   const write = (
-    words = "memo 类似于 class 中 pureComponent 的特性,用于在函数式组件的父组件中对子组件进行缓存,避免在父组件重新渲染时重新渲染子组件,只有在属性发生变化时重新渲染组件",
-    font: any = "/fonts/hy.ttf",
-    fontsize = 30,
+    words = "",
+    font: any,
+    fontSize = 30,
     space = [4, 9.5],
-    boundary = [15, 500 - 15, 707 - 15, 15],
-    route = 10,
+    boundary = [0, 500, 707, 0],
+    chaos = 10,
     offset = 0
   ) => {
-    opentype.load(font, (e: Error, f: any) => {
-      if (e) {
-        alert("字体文件解析错误，重试或者请换一个字体文件");
-      }
-      clearArea()
-      font = f;
-      const ctx: any = canvasCtx.current;
-      let [Horizontal, Vertical] = space;
-      let [topBoundary, rightBoundary, bottomBoundary, leftBoundary] = boundary;
-      //初始化边界
-      ctx.translate(leftBoundary, topBoundary);
-      let Vlimit = rightBoundary - leftBoundary;
-      let Hlimit = bottomBoundary - topBoundary;
-      //处理文字
-      let widths = 0;
-      let heights = fontsize;
-      for (let i = 0; i < words.length; i++) {
-        if (words[i] == " ") {
-          let width = fontsize / 2;
-          if (widths + width + Horizontal > Vlimit) {
-            ctx.translate(-widths, fontsize + Vertical);
-            widths = 0;
-            heights = heights + fontsize + Vertical;
-            if (heights > Hlimit) {
-              console.log("文字超过了");
-              ctx.translate(-widths, -(heights - fontsize));
-              ctx.translate(-leftBoundary, -topBoundary);
-              return words.slice(i);
-            }
-          }
-          ctx.translate(width + Horizontal, 0);
-          widths += width + Horizontal;
-        } else if (words[i] == "\n") {
-          ctx.translate(-widths, fontsize + Vertical);
+    clearArea();
+    const ctx: any = canvasCtx.current;
+    let [Horizontal, Vertical] = space;
+    let [topBoundary, rightBoundary, bottomBoundary, leftBoundary] = boundary;
+    //初始化边界
+    ctx.translate(leftBoundary, topBoundary);
+    let Vlimit = rightBoundary - leftBoundary;
+    let Hlimit = bottomBoundary - topBoundary;
+    //处理文字
+    let widths = 0;
+    let heights = fontSize;
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] == " ") {
+        let width = fontSize / 2;
+        if (widths + width + Horizontal > Vlimit) {
+          ctx.translate(-widths, fontSize + Vertical);
           widths = 0;
-          heights = heights + fontsize + Vertical;
+          heights = heights + fontSize + Vertical;
           if (heights > Hlimit) {
             console.log("文字超过了");
-            ctx.translate(-widths, -(heights - fontsize));
+            ctx.translate(-widths, -(heights - fontSize));
             ctx.translate(-leftBoundary, -topBoundary);
             return words.slice(i);
           }
-        } else {
-          let path = font.getPath(words[i], 0, fontsize, fontsize);
-          if (path.commands.length == 0) {
-            path = font.getPath("#", 0, fontsize, fontsize);
-            path.fill = "red";
-          }
-          let [points, width] = getPoints(path);
-          // @ts-ignore
-          if (widths + width + Horizontal > Vlimit) {
-            ctx.translate(-widths, fontsize + Vertical);
-            widths = 0;
-            heights = heights + fontsize + Vertical;
-            if (heights > Hlimit) {
-              console.log("文字超过了");
-              ctx.translate(-widths, -(heights - fontsize));
-              ctx.translate(-leftBoundary, -topBoundary);
-              return words.slice(i);
-            }
-          }
-          drawText(path, ctx, points, route, offset, fontsize);
-          // @ts-ignore
-          ctx.translate(width + Horizontal, 0);
-          // @ts-ignore
-          widths += width + Horizontal;
         }
+        ctx.translate(width + Horizontal, 0);
+        widths += width + Horizontal;
+      } else if (words[i] == "\n") {
+        ctx.translate(-widths, fontSize + Vertical);
+        widths = 0;
+        heights = heights + fontSize + Vertical;
+        if (heights > Hlimit) {
+          console.log("文字超过了");
+          ctx.translate(-widths, -(heights - fontSize));
+          ctx.translate(-leftBoundary, -topBoundary);
+          return words.slice(i);
+        }
+      } else {
+        let path = font.getPath(words[i], 0, fontSize, fontSize);
+        if (path.commands.length == 0) {
+          path = font.getPath("#", 0, fontSize, fontSize);
+          path.fill = "red";
+        }
+        let [points, width] = getPoints(path);
+        // @ts-ignore
+        if (widths + width + Horizontal > Vlimit) {
+          ctx.translate(-widths, fontSize + Vertical);
+          widths = 0;
+          heights = heights + fontSize + Vertical;
+          if (heights > Hlimit) {
+            console.log("文字超过了");
+            ctx.translate(-widths, -(heights - fontSize));
+            ctx.translate(-leftBoundary, -topBoundary);
+            return words.slice(i);
+          }
+        }
+        drawText(path, ctx, points, chaos, offset, fontSize);
+        // @ts-ignore
+        ctx.translate(width + Horizontal, 0);
+        // @ts-ignore
+        widths += width + Horizontal;
       }
+    }
 
-      ctx.translate(-widths, -(heights - fontsize));
-      ctx.translate(-leftBoundary, -topBoundary);
-      return "";
-    });
+    ctx.translate(-widths, -(heights - fontSize));
+    ctx.translate(-leftBoundary, -topBoundary);
+    return "";
   };
 
   return { write };

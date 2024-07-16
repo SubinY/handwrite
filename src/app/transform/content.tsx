@@ -22,6 +22,11 @@ export function TransferContent() {
     left: 15,
     bottom: 15,
     right: 15,
+    fontSize: 30,
+    horizontalSpace: 4,
+    verticalSpace: 9.5,
+    chaos: 10,
+    offset: 0,
   });
 
   const providerValue = useMemo(

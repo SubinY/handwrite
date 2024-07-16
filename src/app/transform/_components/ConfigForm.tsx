@@ -1,13 +1,24 @@
 "use client";
 
-import { Form, Input, Select, Button } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Button,
+  Row,
+  Col,
+  message,
+  ConfigProvider,
+} from "antd";
+import { TinyColor } from "@ctrl/tinycolor";
 import { useTransferContext } from "../context";
 import { FormValueType } from "../types";
 import { PageSize } from "./PageSize";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useDraw from "./RenderArea/useDraw";
 
-const opentype: any = require('opentype.js');
+const opentype: any = require("opentype.js");
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -16,12 +27,12 @@ const FormItem = Form.Item;
 
 const FontOptions = [
   {
-    label: "hy.ttf",
-    value: "/fonts/hy.ttf",
-  },
-  {
     label: "云烟体.ttf",
     value: "/fonts/云烟体.ttf",
+  },
+  {
+    label: "hy.ttf",
+    value: "/fonts/hy.ttf",
   },
   {
     label: "李国夫手写体.ttf",
@@ -33,11 +44,18 @@ const FontOptions = [
   },
 ];
 
-const fileReader = (input: any) => {
-  let url = window.URL.createObjectURL(input.files.item(0));
-  let name = input.files.item(0).name;
-  return [url, name];
-};
+const colors1 = ["#6253E1", "#04BEFE"];
+
+const getHoverColors = (colors: string[]) =>
+  colors.map((color) => new TinyColor(color).lighten(5).toString());
+const getActiveColors = (colors: string[]) =>
+  colors.map((color) => new TinyColor(color).darken(5).toString());
+
+// const fileReader = (input: any) => {
+//   let url = window.URL.createObjectURL(input.files.item(0));
+//   let name = input.files.item(0).name;
+//   return [url, name];
+// };
 
 export const ConfigForm = () => {
   const [form] = Form.useForm();
@@ -45,8 +63,14 @@ export const ConfigForm = () => {
   const { formV, setFormV } = useTransferContext();
   const { write } = useDraw("renderArea");
   const [fontSource, setFontSource] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    handleFontChange(FontOptions[0].value);
+  }, []);
 
   const handleFontChange = (v: string) => {
+    setLoading(true);
     // let [url,name] = fileReader(fontfileInput)
     // fontfileInput.parentNode.firstChild.textContent = name
     opentype.load(v, (e: Error, f: any) => {
@@ -55,48 +79,142 @@ export const ConfigForm = () => {
       } else {
         setFontSource(f);
       }
+      setLoading(false);
     });
   };
 
   const handleSubmit = (values: any) => {
-    const { pageW, pageH } = values.pageSize;
+    if (!values.inputText.trim()) {
+      return message.warning("请输入文本");
+    }
+    // const { pageW, pageH } = values.pageSize;
+    const { top, left, bottom, right } = formV;
+    const {
+      inputText,
+      fontSize,
+      horizontalSpace,
+      verticalSpace,
+      chaos,
+      offset,
+    } = values;
     const result = {
+      ...formV,
       ...values,
       fontSource,
-      pageW,
-      pageH,
+      // pageW,
+      // pageH,
     };
-    setFormV(values);
-    write(values.inputText);
+    setFormV(result);
+    write(
+      inputText,
+      fontSource,
+      fontSize,
+      [horizontalSpace, verticalSpace],
+      [top, 500 - left, 707 - bottom, right],
+      chaos,
+      offset
+    );
   };
 
   return (
-    <Form
-      layout="vertical"
-      form={form}
-      initialValues={formV}
-      onFinish={handleSubmit}
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            colorPrimary: `linear-gradient(135deg, ${colors1.join(", ")})`,
+            colorPrimaryHover: `linear-gradient(135deg, ${getHoverColors(
+              colors1
+            ).join(", ")})`,
+            colorPrimaryActive: `linear-gradient(135deg, ${getActiveColors(
+              colors1
+            ).join(", ")})`,
+            lineWidth: 0,
+          },
+        },
+      }}
     >
-      <FormItem label="纸张大小" name="pageSize" layout="horizontal">
+      <Form
+        layout="horizontal"
+        wrapperCol={{ offset: 1, span: 12 }}
+        labelCol={{ span: 8 }}
+        form={form}
+        initialValues={formV}
+        onFinish={handleSubmit}
+      >
+        {/* <FormItem label="纸张大小" name="pageSize" layout="horizontal">
         <PageSize />
-      </FormItem>
-      <FormItem label="选择字体" name="font">
-        <Select onChange={handleFontChange}>
-          {FontOptions.map((option) => (
-            <Option value={option.value} key={option.label}>
-              {option.label}
-            </Option>
-          ))}
-        </Select>
-      </FormItem>
-      <FormItem label="输入文本" name="inputText">
-        <TextArea rows={20} />
-      </FormItem>
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          预览
-        </Button>
-      </Form.Item>
-    </Form>
+      </FormItem> */}
+        <Row>
+          <Col span={12}>
+            <FormItem label="选择字体" name="font" className="!text-xl">
+              <Select onChange={handleFontChange}>
+                {FontOptions.map((option) => (
+                  <Option value={option.value} key={option.label}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="字体大小" name="fontSize">
+              <InputNumber className="!w-full" />
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <FormItem label="字体间距" name="horizontalSpace">
+              <InputNumber className="!w-full" />
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="行距" name="verticalSpace">
+              <InputNumber className="!w-full" />
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <FormItem label="混乱程度" name="chaos">
+              <InputNumber className="!w-full" />
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="字体偏离" name="offset">
+              <InputNumber className="!w-full" />
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <FormItem
+              label="输入文本"
+              name="inputText"
+              labelAlign="left"
+              wrapperCol={{ offset: 1, span: 18 }}
+              labelCol={{ span: 4 }}
+            >
+              <TextArea
+                rows={14}
+                placeholder="请输入"
+                className="left-[-12px]"
+              />
+            </FormItem>
+          </Col>
+        </Row>
+        <Form.Item wrapperCol={{ span: 24 }}>
+          <Button
+            type="primary"
+            size="large"
+            htmlType="submit"
+            block
+            loading={loading}
+          >
+            预览
+          </Button>
+        </Form.Item>
+      </Form>
+    </ConfigProvider>
   );
 };
