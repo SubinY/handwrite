@@ -9,8 +9,10 @@ import {
   Row,
   Col,
   message,
+  Upload,
   ConfigProvider,
 } from "antd";
+import type { UploadFile, UploadProps } from "antd";
 import { TinyColor } from "@ctrl/tinycolor";
 import { useTransferContext } from "../context";
 import { FormValueType } from "../types";
@@ -61,13 +63,20 @@ export const ConfigForm = () => {
   const [form] = Form.useForm();
 
   const { formV, setFormV } = useTransferContext();
-  const { write } = useDraw("renderArea");
+  const { write, initPaper } = useDraw("renderArea");
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fontSource, setFontSource] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     handleFontChange(FontOptions[0].value);
   }, []);
+
+  const fileReaderToUrl = (inputFile: any) => {
+    let url = window.URL.createObjectURL(inputFile);
+    console.log(url, "urlurlurl");
+    return url;
+  };
 
   const handleFontChange = (v: string) => {
     setLoading(true);
@@ -81,6 +90,26 @@ export const ConfigForm = () => {
       }
       setLoading(false);
     });
+  };
+
+  const handleFileChange: UploadProps["onChange"] = (info) => {
+    let newFileList = [...info.fileList];
+    newFileList = newFileList.slice(-1);
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.url;
+        file.status = "done";
+      }
+      return file;
+    });
+    setFileList(newFileList);
+    if (newFileList.length) {
+      const url = fileReaderToUrl(newFileList[0].originFileObj);
+      setFormV({
+        ...formV,
+        bgUrl: url,
+      });
+    }
   };
 
   const handleSubmit = (values: any) => {
@@ -144,6 +173,27 @@ export const ConfigForm = () => {
         {/* <FormItem label="纸张大小" name="pageSize" layout="horizontal">
         <PageSize />
       </FormItem> */}
+        <Row>
+          <Col span={24}>
+            <FormItem
+              label="替换背景"
+              name="bgFile"
+              wrapperCol={{ offset: 1, span: 18 }}
+              labelCol={{ span: 4 }}
+            >
+              <Upload
+                onChange={handleFileChange}
+                fileList={fileList}
+                maxCount={1}
+                accept="image/*"
+              >
+                {fileList?.length ? null : (
+                  <Button className="left-[-12px]">上传</Button>
+                )}
+              </Upload>
+            </FormItem>
+          </Col>
+        </Row>
         <Row>
           <Col span={12}>
             <FormItem label="选择字体" name="font" className="!text-xl">

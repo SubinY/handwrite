@@ -4,6 +4,7 @@ export interface PageWH {
 }
 
 export interface FormValueType {
+  bgUrl: string; // 纸张尺寸
   pageSize: PageWH; // 纸张尺寸
   font: string; // 字体
   fontSize?: number; // 字体大小

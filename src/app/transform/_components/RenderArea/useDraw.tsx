@@ -215,5 +215,5 @@ export default function useDraw(id: string) {
     return "";
   };
 
-  return { write };
+  return { write, initPaper };
 }
