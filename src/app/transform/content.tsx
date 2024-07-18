@@ -4,7 +4,7 @@ import { ConfigForm } from "./_components/ConfigForm";
 import { RenderArea } from "./_components/RenderArea/index";
 import TransferContext from "./context";
 import { FormValueType } from "./types";
-import { useMemo, useState } from "react";
+import { useMemo, useRef } from "react";
 
 const A4SIZE = 1.414;
 
@@ -14,7 +14,7 @@ const defaultWH = {
 };
 
 export function TransferContent() {
-  const [formV, setFormV] = useState<FormValueType>({
+  const formV = useRef<FormValueType>({
     font: "/fonts/云烟体.ttf",
     inputText: "",
     pageSize: defaultWH,
@@ -29,13 +29,9 @@ export function TransferContent() {
     offset: 0,
   });
 
-  const providerValue = useMemo(
-    () => ({
-      formV,
-      setFormV,
-    }),
-    [formV]
-  );
+  const providerValue = {
+    formV,
+  };
 
   return (
     <TransferContext.Provider value={providerValue}>

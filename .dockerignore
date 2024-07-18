@@ -1,0 +1,9 @@
+node_modules
+.git
+.gitignore
+*.tag.gz
+
+.contentlayer
+.next
+.vscode
+postgres

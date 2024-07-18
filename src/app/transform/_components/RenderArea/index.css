@@ -10,4 +10,6 @@
   left: 0;
   top: 0;
   background-color: #dddddd;
+  z-index: 1;
+  cursor: move;
 }

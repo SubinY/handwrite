@@ -9,14 +9,6 @@ export const metadata = {
   creator: siteConfig.creator,
   themeColor: siteConfig.themeColor,
   icons: siteConfig.icons,
-  openGraph: {
-    ...siteConfig.openGraph,
-    title: "Login Page",
-  },
-  twitter: {
-    ...siteConfig.twitter,
-    title: "Login Page",
-  },
 };
 
 export default async function TransformPage() {

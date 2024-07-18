@@ -62,7 +62,7 @@ const getActiveColors = (colors: string[]) =>
 export const ConfigForm = () => {
   const [form] = Form.useForm();
 
-  const { formV, setFormV } = useTransferContext();
+  const { formV } = useTransferContext();
   const { write, initPaper } = useDraw("renderArea");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fontSource, setFontSource] = useState<any>();
@@ -74,7 +74,6 @@ export const ConfigForm = () => {
 
   const fileReaderToUrl = (inputFile: any) => {
     let url = window.URL.createObjectURL(inputFile);
-    console.log(url, "urlurlurl");
     return url;
   };
 
@@ -105,10 +104,10 @@ export const ConfigForm = () => {
     setFileList(newFileList);
     if (newFileList.length) {
       const url = fileReaderToUrl(newFileList[0].originFileObj);
-      setFormV({
+      formV.current = {
         ...formV,
         bgUrl: url,
-      });
+      };
     }
   };
 
@@ -117,7 +116,7 @@ export const ConfigForm = () => {
       return message.warning("请输入文本");
     }
     // const { pageW, pageH } = values.pageSize;
-    const { top, left, bottom, right } = formV;
+    const { top, left, bottom, right } = formV.current;
     const {
       inputText,
       fontSize,
@@ -127,19 +126,19 @@ export const ConfigForm = () => {
       offset,
     } = values;
     const result = {
-      ...formV,
+      ...formV.current,
       ...values,
       fontSource,
       // pageW,
       // pageH,
     };
-    setFormV(result);
+    formV.current = result;
     write(
       inputText,
       fontSource,
       fontSize,
       [horizontalSpace, verticalSpace],
-      [top, 500 - left, 707 - bottom, right],
+      [top, 500 - right, 707 - bottom, left],
       chaos,
       offset
     );
@@ -167,7 +166,7 @@ export const ConfigForm = () => {
         wrapperCol={{ offset: 1, span: 12 }}
         labelCol={{ span: 8 }}
         form={form}
-        initialValues={formV}
+        initialValues={formV.current}
         onFinish={handleSubmit}
       >
         {/* <FormItem label="纸张大小" name="pageSize" layout="horizontal">
