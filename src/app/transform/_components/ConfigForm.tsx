@@ -63,7 +63,7 @@ export const ConfigForm = () => {
   const [form] = Form.useForm();
 
   const { formV } = useTransferContext();
-  const { write, initPaper } = useDraw("renderArea");
+  const { write, save } = useDraw("renderArea");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fontSource, setFontSource] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -259,8 +259,18 @@ export const ConfigForm = () => {
             htmlType="submit"
             block
             loading={loading}
+            className="mb-2"
           >
             预览
+          </Button>
+          <Button
+            type="primary"
+            size="large"
+            onClick={save}
+            block
+            loading={loading}
+          >
+            下载
           </Button>
         </Form.Item>
       </Form>

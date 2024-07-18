@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { downloadContent } from "@/utils/download";
 
 const opentype: any = require("opentype.js");
 
@@ -16,7 +17,16 @@ export default function useDraw(id: string) {
     initPaper(500, 707);
   }, []);
 
-  const initPaper = (width: number, height: number) => {
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
+
+  const initPaper = async (width: number, height: number) => {
     if (canvas.current) {
       canvas.current.remove();
     }
@@ -27,7 +37,11 @@ export default function useDraw(id: string) {
     canvas.current.style.position = "absolute";
     canvas.current.style.top = "0";
     parentRef.current!.appendChild(canvas.current);
+    const bgImg = await loadImage(
+      parentRef.current!.querySelector("#canvas_bg")?.src
+    );
     canvasCtx.current = canvas.current.getContext("2d");
+    canvasCtx.current.drawImage(bgImg, 0, 0, 500, 703);
   };
 
   const rotateT = (x0: number, y0: number, x: number, y: number, a: number) => {
@@ -137,7 +151,7 @@ export default function useDraw(id: string) {
     );
   };
 
-  const write = (
+  const write = async (
     words = "",
     font: any,
     fontSize = 30,
@@ -146,7 +160,7 @@ export default function useDraw(id: string) {
     chaos = 10,
     offset = 0
   ) => {
-    clearArea();
+    await initPaper(500, 707);
     const ctx: any = canvasCtx.current;
     let [Horizontal, Vertical] = space;
     let [topBoundary, rightBoundary, bottomBoundary, leftBoundary] = boundary;
@@ -215,5 +229,15 @@ export default function useDraw(id: string) {
     return "";
   };
 
-  return { write, initPaper };
+  const save = () => {
+    canvas.current.toBlob(
+      (blob: Blob) => {
+        downloadContent(blob, "下载.jpg");
+      },
+      "image/jpg",
+      0.8
+    );
+  };
+
+  return { write, initPaper, save };
 }

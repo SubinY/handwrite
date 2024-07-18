@@ -75,6 +75,7 @@ export const RenderArea = () => {
       <div id="renderArea" className="h-full min-w-[500px]">
         <Image
           alt="logo"
+          id="canvas_bg"
           src={formV.current.bgUrl ? formV.current.bgUrl : "/imgs/A4本子.jpg"}
           width={480}
           height={480 * 1.414}
