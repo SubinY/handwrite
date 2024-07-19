@@ -4,7 +4,7 @@ import { ConfigForm } from "./_components/ConfigForm";
 import { RenderArea } from "./_components/RenderArea/index";
 import TransferContext from "./context";
 import { FormValueType } from "./types";
-import { useMemo, useRef } from "react";
+import { useMemo, useState } from "react";
 
 const A4SIZE = 1.414;
 
@@ -14,7 +14,7 @@ const defaultWH = {
 };
 
 export function TransferContent() {
-  const formV = useRef<FormValueType>({
+  const [formV, setFormV] = useState<FormValueType>({
     font: "/fonts/云烟体.ttf",
     inputText: "",
     pageSize: defaultWH,
@@ -31,6 +31,7 @@ export function TransferContent() {
 
   const providerValue = {
     formV,
+    setFormV
   };
 
   return (

@@ -88,10 +88,10 @@ export default function useBound(id: string) {
   const init = (dom: HTMLElement) => {
     const width = dom.offsetWidth;
     const height = dom.offsetHeight;
-    const topDom = createBound(`${width}px`, "4px", "0px");
-    const bottomDom = createBound(`${width}px`, "4px", `${height}px`);
-    const leftDom = createBound("4px", `${height}px`, "0px");
-    const rightDom = createBound("4px", `${height}px`, `${width}px`);
+    const topDom = createBound(`${width}px`, "4px", "15px");
+    const bottomDom = createBound(`${width}px`, "4px", `${height - 15}px`);
+    const leftDom = createBound("4px", `${height}px`, "15px");
+    const rightDom = createBound("4px", `${height}px`, `${width - 15}px`);
 
     setBounds([topDom, rightDom, bottomDom, leftDom]);
     dom.appendChild(topDom);

@@ -62,8 +62,8 @@ const getActiveColors = (colors: string[]) =>
 export const ConfigForm = () => {
   const [form] = Form.useForm();
 
-  const { formV } = useTransferContext();
-  const { write, save } = useDraw("renderArea");
+  const { formV, setFormV } = useTransferContext();
+  const { write, save, initPaper } = useDraw("renderArea");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fontSource, setFontSource] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -92,6 +92,7 @@ export const ConfigForm = () => {
   };
 
   const handleFileChange: UploadProps["onChange"] = (info) => {
+    console.log(info, 'infoinfo')
     let newFileList = [...info.fileList];
     newFileList = newFileList.slice(-1);
     newFileList = newFileList.map((file) => {
@@ -104,10 +105,11 @@ export const ConfigForm = () => {
     setFileList(newFileList);
     if (newFileList.length) {
       const url = fileReaderToUrl(newFileList[0].originFileObj);
-      formV.current = {
+      setFormV({
         ...formV,
         bgUrl: url,
-      };
+      });
+      initPaper(500, 707);
     }
   };
 
@@ -116,7 +118,7 @@ export const ConfigForm = () => {
       return message.warning("请输入文本");
     }
     // const { pageW, pageH } = values.pageSize;
-    const { top, left, bottom, right } = formV.current;
+    const { top, left, bottom, right } = formV;
     const {
       inputText,
       fontSize,
@@ -126,13 +128,13 @@ export const ConfigForm = () => {
       offset,
     } = values;
     const result = {
-      ...formV.current,
+      ...formV,
       ...values,
       fontSource,
       // pageW,
       // pageH,
     };
-    formV.current = result;
+    setFormV(result);
     write(
       inputText,
       fontSource,
@@ -166,7 +168,7 @@ export const ConfigForm = () => {
         wrapperCol={{ offset: 1, span: 12 }}
         labelCol={{ span: 8 }}
         form={form}
-        initialValues={formV.current}
+        initialValues={formV}
         onFinish={handleSubmit}
       >
         {/* <FormItem label="纸张大小" name="pageSize" layout="horizontal">

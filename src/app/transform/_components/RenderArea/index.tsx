@@ -5,43 +5,66 @@ import Image from "next/image";
 import { useTransferContext } from "../../context";
 import useBound from "./useBound";
 import "./index.css";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const FormItem = Form.Item;
 
 export const RenderArea = () => {
   const [form] = Form.useForm();
-  const { formV } = useTransferContext();
+  const { formV, setFormV } = useTransferContext();
   const { setBoundPos, bounds } = useBound("renderArea");
 
   useEffect(() => {
-    if (bounds?.length) {
-      bounds.forEach((item, index) => {
-        switch(index) {
-          case 0:
-            formV.current = { ...formV.current, top: item.offsetTop };
-            form.setFieldValue('top', item.offsetTop);
-            break;
-          case 1:
-            formV.current = { ...formV.current, right: item.parentNode.getBoundingClientRect().width - item.offsetLeft };
-            form.setFieldValue('right', item.parentNode.getBoundingClientRect().width - item.offsetLeft);
-            break;
-          case 2:
-            formV.current = { ...formV.current, bottom: item.parentNode.getBoundingClientRect().height - item.offsetTop };
-            form.setFieldValue('bottom', item.parentNode.getBoundingClientRect().height - item.offsetTop);
-            break;
-          case 3:
-            formV.current = { ...formV.current, left: item.offsetLeft };
-            form.setFieldValue('left', item.offsetLeft);
-        }
-      });
-    }
+    if (bounds?.length) setFormVFn();
   }, [bounds]);
+
+  const setFormVFn = useCallback(() => {
+    let top = 0,
+      left = 0,
+      right = 0,
+      bottom = 0;
+    bounds.forEach((item, index) => {
+      switch (index) {
+        case 0:
+          top = item.offsetTop;
+          form.setFieldValue("top", item.offsetTop);
+          break;
+        case 1:
+          right =
+            // @ts-ignore
+            item.parentNode.getBoundingClientRect().width - item.offsetLeft;
+          form.setFieldValue(
+            "right",
+            // @ts-ignore
+            item.parentNode.getBoundingClientRect().width - item.offsetLeft
+          );
+          break;
+        case 2:
+          bottom =
+            // @ts-ignore
+            item.parentNode.getBoundingClientRect().height - item.offsetTop;
+          form.setFieldValue(
+            "bottom",
+            // @ts-ignore
+            item.parentNode.getBoundingClientRect().height - item.offsetTop
+          );
+          break;
+        case 3:
+          left = item.offsetLeft;
+          form.setFieldValue("left", item.offsetLeft);
+      }
+    });
+    setFormV({ ...formV, top, left, right, bottom });
+  }, [formV, bounds]);
+
+  useEffect(() => {
+    console.log(formV.bgUrl, "formV.bgUrl");
+  }, [formV.bgUrl]);
 
   const handleFieldsChange = (changedFields: any) => {
     const { name, value } = changedFields[0];
-    const tempFormV = { ...formV.current, [name[0]]: value };
-    formV.current = tempFormV;
+    const tempFormV = { ...formV, [name[0]]: value };
+    setFormV(tempFormV);
     for (let key in tempFormV) {
       if (["left", "top", "right", "bottom"].includes(key)) {
         setBoundPos(key, tempFormV);
@@ -55,7 +78,7 @@ export const RenderArea = () => {
         className="flex justify-center"
         layout="horizontal"
         form={form}
-        initialValues={formV.current}
+        initialValues={formV}
         variant="filled"
         onFieldsChange={handleFieldsChange}
       >
@@ -76,7 +99,7 @@ export const RenderArea = () => {
         <Image
           alt="logo"
           id="canvas_bg"
-          src={formV.current.bgUrl ? formV.current.bgUrl : "/imgs/A4本子.jpg"}
+          src={formV.bgUrl ? formV.bgUrl : "/imgs/A4本子.jpg"}
           width={480}
           height={480 * 1.414}
           style={{

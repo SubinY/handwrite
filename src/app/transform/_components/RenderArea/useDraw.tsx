@@ -38,6 +38,7 @@ export default function useDraw(id: string) {
     canvas.current.style.top = "0";
     parentRef.current!.appendChild(canvas.current);
     const bgImg = await loadImage(
+      // @ts-ignore
       parentRef.current!.querySelector("#canvas_bg")?.src
     );
     canvasCtx.current = canvas.current.getContext("2d");
