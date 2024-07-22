@@ -2,16 +2,16 @@
 
 import { Form, InputNumber, Select, Button } from "antd";
 import Image from "next/image";
-import { useTransferContext } from "../../context";
 import useBound from "./useBound";
 import "./index.css";
 import { useCallback, useEffect } from "react";
 
 const FormItem = Form.Item;
 
-export const RenderArea = () => {
+export const RenderArea = (props: any) => {
+  const { formV, setFormV } = props;
+
   const [form] = Form.useForm();
-  const { formV, setFormV } = useTransferContext();
   const { setBoundPos, bounds } = useBound("renderArea");
 
   useEffect(() => {
@@ -56,10 +56,6 @@ export const RenderArea = () => {
     });
     setFormV({ ...formV, top, left, right, bottom });
   }, [formV, bounds]);
-
-  useEffect(() => {
-    console.log(formV.bgUrl, "formV.bgUrl");
-  }, [formV.bgUrl]);
 
   const handleFieldsChange = (changedFields: any) => {
     const { name, value } = changedFields[0];

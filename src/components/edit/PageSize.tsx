@@ -2,7 +2,7 @@
 
 import { InputNumber } from "antd";
 import React, { useState } from "react";
-import { PageWH } from "../types";
+import { PageWH } from "./types";
 
 interface PriceInputProps {
   id?: string;

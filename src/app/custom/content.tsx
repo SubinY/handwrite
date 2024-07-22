@@ -2,9 +2,13 @@
 
 import { ConfigForm } from "@/components/edit/ConfigForm";
 import { RenderArea } from "@/components/edit/RenderArea/index";
-import TransferContext from "./context";
 import type { FormValueType } from "@/components/edit/types";
 import { useMemo, useState } from "react";
+import { Tabs } from "antd";
+import type { TabsProps } from "antd";
+import { CropperList } from "./_components/CropperList";
+
+const { TabPane } = Tabs;
 
 const A4SIZE = 1.414;
 
@@ -13,7 +17,7 @@ const defaultWH = {
   pageH: 700 * A4SIZE,
 };
 
-export function TransferContent() {
+export function CustomContent() {
   const [formV, setFormV] = useState<FormValueType>({
     font: "/fonts/云烟体.ttf",
     inputText: "",
@@ -34,11 +38,30 @@ export function TransferContent() {
     setFormV,
   };
 
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Tab 1",
+      children: "Content of Tab Pane 1",
+    },
+    {
+      key: "2",
+      label: "Tab 2",
+      children: "Content of Tab Pane 2",
+    },
+  ];
+
   return (
     <div className="h-screen z-10 container flex p-4">
       <div className="h-full min-w-[500px] p-4 border-r border-solid border-stone-400">
-        <p className="h-8 mb-2 text-center font-bold text-2xl">页面设置</p>
-        <ConfigForm {...providerValue} />
+        <Tabs defaultActiveKey="crop">
+          <TabPane tab="书写区域" key="crop">
+            <CropperList />
+          </TabPane>
+          <TabPane tab="全局设置" key="global">
+            <ConfigForm {...providerValue} />
+          </TabPane>
+        </Tabs>
       </div>
       <div className="h-[750px] p-4 flex flex-1 justify-center">
         <RenderArea {...providerValue} />

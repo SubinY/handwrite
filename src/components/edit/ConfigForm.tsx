@@ -14,8 +14,7 @@ import {
 } from "antd";
 import type { UploadFile, UploadProps } from "antd";
 import { TinyColor } from "@ctrl/tinycolor";
-import { useTransferContext } from "../context";
-import { FormValueType } from "../types";
+import { FormValueType } from "./types";
 import { PageSize } from "./PageSize";
 import { useState, useEffect } from "react";
 import useDraw from "./RenderArea/useDraw";
@@ -59,10 +58,11 @@ const getActiveColors = (colors: string[]) =>
 //   return [url, name];
 // };
 
-export const ConfigForm = () => {
+export const ConfigForm = (props: any) => {
+  const { formV, setFormV } = props;
+
   const [form] = Form.useForm();
 
-  const { formV, setFormV } = useTransferContext();
   const { write, save, initPaper } = useDraw("renderArea");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fontSource, setFontSource] = useState<any>();
@@ -92,7 +92,7 @@ export const ConfigForm = () => {
   };
 
   const handleFileChange: UploadProps["onChange"] = (info) => {
-    console.log(info, 'infoinfo')
+    console.log(info, "infoinfo");
     let newFileList = [...info.fileList];
     newFileList = newFileList.slice(-1);
     newFileList = newFileList.map((file) => {
