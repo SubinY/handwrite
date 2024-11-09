@@ -2,16 +2,12 @@
 
 import Modal from "@/components/shared/modal";
 import Image from "next/image";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useMemo, useState, useRef } from "react";
 import type { editItem } from "../types";
 import { Button, Space } from "antd";
 import { Icons } from "@/components/Icons";
+import Cropper, { ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 export const EditModal = ({
   showModal,
@@ -20,6 +16,12 @@ export const EditModal = ({
 }: editItem & { showModal: boolean; setShowModal: any }) => {
   const { id, name } = props;
 
+  const cropperRef = useRef<ReactCropperElement>(null);
+  const onCrop = () => {
+    const cropper = cropperRef.current?.cropper;
+    // console.log(cropper.getCroppedCanvas().toDataURL());
+  };
+
   return (
     <>
       <Modal showModal={showModal} setShowModal={setShowModal}>
@@ -27,14 +29,17 @@ export const EditModal = ({
           <div className="w-full mr-0 flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white text-center">
             <div className="heade w-full flex justify-between p-[15px] border-b-[1px]">
               <span className="text-xl">{name}</span>
-              <Icons.close className="cursor-pointer" onClick={() => setShowModal(false)} />
+              <Icons.close
+                className="cursor-pointer"
+                onClick={() => setShowModal(false)}
+              />
             </div>
             <div className="content w-full">
               {/* <div
                 className="imgBg w-full h-[70vh] bg-no-repeat bg-contain bg-size-cover bg-center"
                 style={{ backgroundImage: `url(/imgs/A4本子.jpg)` }}
               ></div> */}
-              <Image
+              {/* <Image
                 alt="logo"
                 id="canvas_bg"
                 src={"/imgs/A4本子.jpg"}
@@ -43,6 +48,15 @@ export const EditModal = ({
                 style={{
                   margin: "0 auto",
                 }}
+              /> */}
+
+              <Cropper
+                src="/imgs/A4本子.jpg"
+                style={{ height: 300 * 1.414, width: "100%" }}
+                initialAspectRatio={16 / 9}
+                guides={false}
+                crop={onCrop}
+                ref={cropperRef}
               />
             </div>
             <div className="footer w-full p-[15px] text-right border-t-[1px]">

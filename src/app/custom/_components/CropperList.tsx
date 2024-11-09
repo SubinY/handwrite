@@ -50,7 +50,7 @@ export function CropperList() {
           </List.Item>
         )}
       />
-      <EditModal {...modalProps.current} />
+      <EditModal id="editModal" name="editModal" {...modalProps.current} />
     </div>
   );
 }
