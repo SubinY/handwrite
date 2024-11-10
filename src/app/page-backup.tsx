@@ -301,6 +301,7 @@ const features = [
 const reactInsights = [
   {
     title: "React Fiber",
+    href: "/",
     description: `Dive deep into React Fiber.
     👉 [Read the blog post](https://weijunext.com/article/dive-into-react-fiber)
       `,
@@ -312,6 +313,7 @@ const reactInsights = [
   },
   {
     title: "React Hooks",
+    href: "/",
     description: `Dive deep into React hooks.
     👉 [Read the blog post](https://weijunext.com/tag/React%20hooks)
     👉 [Visit the demos page](/hooks)
@@ -327,6 +329,7 @@ const reactInsights = [
 const posts = [
   {
     title: "NextJS Page Router: rendering",
+    href: "/",
     description: `Explaining CSR, SSR, SSG, and ISR in Next.js.
       👉 [Read the blog post](https://weijunext.com/article/fa1588d6-c068-40ec-a587-4572bd349b25)`,
     demo: (
@@ -337,6 +340,7 @@ const posts = [
   },
   {
     title: "NextJS APP Router: rendering",
+    href: "/",
     description: `NextJS v13 server-side and client-side components best practices.
       👉 [Read the blog post](https://weijunext.com/article/9e02de2e-c76c-4b82-998a-9e7066450c42)`,
     demo: (
@@ -347,6 +351,7 @@ const posts = [
   },
   {
     title: "Google Auth2.0",
+    href: "/",
     description: `Develop Google OAuth 2.0 login.
       👉 [Read the blog post](https://weijunext.com/article/485132d1-31bd-4cb5-9fbc-576fb64d5ae9)`,
     demo: (
