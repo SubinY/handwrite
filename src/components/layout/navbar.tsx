@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSignInModal } from "./sign-in-modal";
 
-export default function NavBar({ user }: { user: UserInfo | null }) {
+export default function NavBar({ user }: { user?: UserInfo | null }) {
   const { SignInModal, setShowSignInModal } = useSignInModal();
   const scrolled = useScroll(50);
 
