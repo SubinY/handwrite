@@ -110,9 +110,10 @@ export default async function Home() {
         <Balancer>Stack & Feature</Balancer>
       </h3>
       <div className="grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {features.map(({ title, description, demo }) => (
+        {features.map(({ title, href, description, demo }) => (
           <Card
             key={title}
+            href={href}
             title={title}
             description={description}
             demo={
@@ -133,9 +134,10 @@ export default async function Home() {
         <Balancer>React Insights</Balancer>
       </h3>
       <div className="grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {reactInsights.map(({ title, description, demo }) => (
+        {reactInsights.map(({ title, href, description, demo }) => (
           <Card
             key={title}
+            href={href}
             title={title}
             description={description}
             demo={
@@ -156,9 +158,10 @@ export default async function Home() {
         <Balancer>Other Hot Posts</Balancer>
       </h3>
       <div className="grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {posts.map(({ title, description, demo }) => (
+        {posts.map(({ title, href, description, demo }) => (
           <Card
             key={title}
+            href={href}
             title={title}
             description={description}
             demo={
@@ -178,6 +181,7 @@ export default async function Home() {
 const features = [
   {
     title: "Next.js + TailWindCSS",
+    href: "/",
     description: `This repo base on Next.js and TailWindCSS.
     👉 [Read my blog posts — J实验室](https://weijunext.com/tag/NextJS/)`,
     demo: (
@@ -189,6 +193,7 @@ const features = [
   },
   {
     title: "Auth + Database",
+    href: "/",
     description: `Implement login module with Next.js, Next-Auth, Postgres, and Prisma.
     👉 [Visit the source code](https://github.com/weijunext/nextjs-learn-demos/tree/NextAuth-Prisma)
     👉 [Read the blog post](https://weijunext.com/article/061d8cd9-fcf3-4d9e-bd33-e257bc4f9989)
@@ -203,6 +208,7 @@ const features = [
   },
   {
     title: "Docker compose",
+    href: "/",
     description: `Explore the usage of Docker and Docker Compose.
     👉 [Visit the source code](https://github.com/weijunext/nextjs-learn-demos/tree/docker).
     👉 [Read the blog post](https://weijunext.com/article/b33a5545-fd26-47a6-8641-3c7467fb3910).
@@ -215,6 +221,7 @@ const features = [
   },
   {
     title: "Upstash Redis",
+    href: "/",
     description: `Use Upstash as your Redis server.
     👉 [Visit the source code](https://github.com/weijunext/nextjs-learn-demos/tree/Upstash).
       👉 [Read the blog post](https://weijunext.com/article/6510121c-90da-4d20-85a1-72cbbdb3983b).
@@ -227,6 +234,7 @@ const features = [
   },
   {
     title: "MDX Contentlayer",
+    href: "/",
     description: `Turn your Markdown files into static web pages.
     👉 [Visit the demo page](/mdx-page-demo).
     👉 [Visit the source code](https://github.com/weijunext/nextjs-learn-demos/tree/contentlayer).
@@ -247,6 +255,7 @@ const features = [
   },
   {
     title: "Membership Feature",
+    href: "/",
     description: `Design and develop a membership feature.
     👉 [Visit the demo page](/fake-membership).
     👉 [Visit the source code](https://github.com/weijunext/nextjs-learn-demos/tree/membership).
@@ -260,6 +269,7 @@ const features = [
   },
   {
     title: "Integrate Lemon Squeezy",
+    href: "/",
     description: `Develop your globally available membership features using Lemon Squeezy.
     👉 [Visit the demo page](https://www.smartexcel.cc).
     👉 [Visit the source code](https://github.com/weijunext/smart-excel-open).
@@ -273,6 +283,7 @@ const features = [
   },
   {
     title: "SEO",
+    href: "/",
     description: `Key SEO Configuration for Next.js.
     👉 [Visit the source code1](https://github.com/weijunext/nextjs-learn-demos/tree/metadata).
     👉 [Visit the source code2](https://github.com/weijunext/nextjs-learn-demos/tree/sitemap).
