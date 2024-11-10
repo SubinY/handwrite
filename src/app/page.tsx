@@ -55,9 +55,10 @@ export default async function Home() {
         <Balancer>我能做什么</Balancer>
       </h3>
       <div className="grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {features.map(({ title, description, demo }) => (
+        {features.map(({ title, href, description, demo }) => (
           <Card
             key={title}
+            href={href}
             title={title}
             description={description}
             demo={
@@ -77,6 +78,7 @@ export default async function Home() {
 const features = [
   {
     title: "在空白纸上书写",
+    href: "/transform",
     description: `内置多种尺寸纸张，一键生成手写样式文稿，可以根据自己的书写习惯进行调整，生成独一无二的抄写文稿`,
     demo: (
       // <div className="flex items-center justify-center space-x-20">
@@ -85,6 +87,22 @@ const features = [
       <PreviewImage
         alt="白纸手写"
         src="/imgs/pic_kongbai1.jpg"
+        width={150}
+        height={150}
+      />
+    ),
+  },
+  {
+    title: "指定多个区域书写",
+    href: "/custom",
+    description: `上传自定义图片，指定书写区域，一键生成你的专属手写文稿`,
+    demo: (
+      // <div className="flex items-center justify-center space-x-20">
+      //   <Image alt="logo" src="/tailwindcss.svg" width={50} height={50} />
+      // </div>
+      <PreviewImage
+        alt="区域手写"
+        src="/imgs/pic_pdf.jpg"
         width={150}
         height={150}
       />

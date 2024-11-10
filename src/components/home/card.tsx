@@ -1,14 +1,17 @@
 import { ReactNode } from "react";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import Balancer from "react-wrap-balancer";
 
 export default function Card({
   title,
+  href,
   description,
   demo,
   large,
 }: {
   title: string;
+  href: string;
   description: string;
   demo?: ReactNode;
   large?: boolean;
@@ -26,7 +29,12 @@ export default function Card({
       )}
       <div className="mx-auto max-w-md text-center">
         <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
-          <Balancer>{title}</Balancer>
+          <Link
+            href={href}
+            rel="noreferrer"
+          >
+            <Balancer className="text-decoration-underline">{title}</Balancer>
+          </Link>
         </h2>
         <div className="prose-sm mt-2 leading-normal text-gray-500 md:prose whitespace-pre-wrap">
           <Balancer>
@@ -34,7 +42,6 @@ export default function Card({
               components={{
                 a: ({ node, ...props }) => (
                   <a
-                    target="_blank"
                     rel="noopener noreferrer"
                     {...props}
                     className="font-medium text-gray-800 underline transition-colors"
